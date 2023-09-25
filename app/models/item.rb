@@ -16,8 +16,7 @@ validates :condition_id      , presence: true
 validates :shipping_charge_id, presence: true
 validates :prefecture_id     , presence: true
 validates :lead_time_id      , presence: true
-validates :price             , presence: true, numericality: {greater_than_or_equal_to: 300, less_than_or_equal_to: 9_999_999 }, format: { with: /\A[0-9]+\z/ }
-validates :user              , presence: true
+validates :price             , presence: true, only_integer: true, numericality: {greater_than_or_equal_to: 300, less_than_or_equal_to: 9_999_999 }, format: { with: /\A[0-9]+\z/ }
 validates :image             , presence: true
 
 validates :category_id       , numericality: { other_than: 1 , message: "can't be blank"}
