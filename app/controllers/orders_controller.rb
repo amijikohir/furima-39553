@@ -1,4 +1,5 @@
 class OrdersController < ApplicationController
+  before_action :item_find
   before_action :move_to_index
   before_action :redirect_to_index
   before_action :authenticate_user!
@@ -6,11 +7,9 @@ class OrdersController < ApplicationController
   def index
     gon.public_key = ENV["PAYJP_PUBLIC_KEY"]
     @order_shipping = OrderShipping.new
-    @item = Item.find(params[:item_id])
   end
 
   def create
-    @item = Item.find(params[:item_id])
     @order_shipping = OrderShipping.new(order_params)
     if @order_shipping.valid?
       pay_item
@@ -23,6 +22,11 @@ class OrdersController < ApplicationController
   end
 
   private  
+
+  def item_find
+    @item = Item.find(params[:item_id])
+  end
+
   def move_to_index
     @item = Item.find(params[:item_id])
     if user_signed_in? && current_user.id == @item.user_id

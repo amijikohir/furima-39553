@@ -59,6 +59,31 @@ RSpec.describe OrderShipping, type: :model do
         @order_shipping.valid?
         expect(@order_shipping.errors.full_messages).to include("Phone number is invalid")
       end
+      it "phone_numberが9桁以下では購入できない" do
+        @order_shipping.phone_number = '123456789'
+        @order_shipping.valid?
+        expect(@order_shipping.errors.full_messages).to include("Phone number is too short (minimum is 10 characters)")
+      end
+      it "phone_numberが12桁以上では購入できない" do
+        @order_shipping.phone_number = '123456789012'
+        @order_shipping.valid?
+        expect(@order_shipping.errors.full_messages).to include("Phone number is too long (maximum is 11 characters)")
+      end
+      it "phone_numberに半角数字以外が含まれている場合は購入できない" do
+        @order_shipping.phone_number = '12a3456789'
+        @order_shipping.valid?
+        expect(@order_shipping.errors.full_messages).to include("Phone number is invalid")
+      end
+      it "userが紐づいていなければ購入できない" do
+        @order_shipping.user_id = nil
+        @order_shipping.valid?
+        expect(@order_shipping.errors.full_messages).to include("User can't be blank")
+      end
+      it "itemが紐づいていなければ購入できない" do
+        @order_shipping.item_id = nil
+        @order_shipping.valid?
+        expect(@order_shipping.errors.full_messages).to include("Item can't be blank")
+      end
     end
   end
 end
